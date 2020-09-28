@@ -6,24 +6,11 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace SpPerfChart
 {
-    /// <summary>
-    /// Scale mode for value aspect ratio
-    /// </summary>
-    public enum ScaleMode
-    {
-        /// <summary>
-        /// Absolute Scale Mode: Values from 0 to 100 are accepted and displayed
-        /// </summary>
-        Absolute,
-        /// <summary>
-        /// Relative Scale Mode: All values are allowed and displayed in a proper relation
-        /// </summary>
-        Relative
-    }
-
     public class DataSample
     {
         public Int32[] value;
@@ -84,21 +71,21 @@ namespace SpPerfChart
         // Horizontal value space in Pixels
         private int valueSpacing = 1;
         // The currently highest displayed value, required for Relative Scale Mode
-        private Int32 currentMaxValue = 0;
+        private Int32[] currentMaxValue = new Int32[4] ;
+        // The currently lowest displayed value, required for Relative Scale Mode
+        private Int32[] currentMinValue = new Int32[4] ;
         // Offset value for the scrolling grid
         private int gridScrollOffset = 0;
         // The current average value
         private Int32 averageValue = 0;
         // Border Style
         private Border3DStyle b3dstyle = Border3DStyle.Sunken;
-        // Scale mode for value aspect ratio
-        private ScaleMode scaleMode = ScaleMode.Absolute;
         // Timer Mode
         private TimerMode timerMode;
         // List of stored values
         private List<DataSample> drawValues;
         // Value queue for Timer Modes
-        private Queue<DataSample> waitingValues;
+        private ConcurrentQueue<DataSample> waitingValues;
         // Style and Design
         private PerfChartStyle perfChartStyle;
         private PerfChartPenStyle[] perfChartPenStyles;
@@ -125,7 +112,7 @@ namespace SpPerfChart
 
             chartSize = 500;
             drawValues = new List<DataSample>(chartSize);
-            waitingValues = new Queue<DataSample>();
+            waitingValues = new ConcurrentQueue<DataSample>();
 
             // Set Optimized Double Buffer to reduce flickering
             this.SetStyle(ControlStyles.UserPaint, true);
@@ -165,11 +152,6 @@ namespace SpPerfChart
                 b3dstyle = value;
                 Invalidate();
             }
-        }
-
-        public ScaleMode ScaleMode {
-            get { return scaleMode; }
-            set { scaleMode = value; }
         }
 
         public TimerMode TimerMode {
@@ -230,7 +212,7 @@ namespace SpPerfChart
         // Amount of currently visible values (calculated from control width and value spacing)
         public int VisibleValues { get; set; } = 0;
 
-        public int VisibleValues { get; set; } = 0;
+        //public int VisibleValues { get; set; } = 0;
 
         #endregion
 
@@ -251,10 +233,6 @@ namespace SpPerfChart
         /// </summary>
         /// <param name="value">progress value</param>
         public void AddValue(DataSample values) {
-            if (scaleMode == ScaleMode.Absolute && values.value[0] > 100M)
-                throw new Exception(String.Format("Values greater then 100 not allowed in ScaleMode: Absolute ({0})", values.value[0]));
-
-
             switch (timerMode) {
                 case TimerMode.Disabled:
                     ChartAppend(values);
@@ -290,7 +268,7 @@ namespace SpPerfChart
         /// </summary>
         /// <param name="value">performance value</param>
         private void ChartAppend(DataSample value) {
-            // Insert at first position; Negative values are flatten to 0 (zero)
+            // Insert at first position
             drawValues.Insert(0, value);
 
             // Remove last item if maximum value count is reached
@@ -311,8 +289,15 @@ namespace SpPerfChart
             // Proceed only if there are values at all
             if (waitingValues.Count > 0) {
                 if (timerMode == TimerMode.Simple) {
-                    while (waitingValues.Count > 0)
-                        ChartAppend(waitingValues.Dequeue());
+                    DataSample s;
+                    Debug.WriteLine("Dequeue:" + waitingValues.Count.ToString());
+                    while (!waitingValues.IsEmpty)
+                    {
+                        if (waitingValues.TryDequeue(out s))
+                        {
+                            ChartAppend(s);
+                        }
+                    }
                 }
                 else if (timerMode == TimerMode.SynchronizedAverage ||
                          timerMode == TimerMode.SynchronizedSum) {
@@ -320,15 +305,20 @@ namespace SpPerfChart
                     DataSample appendValue = new DataSample();
                     int valueCount = waitingValues.Count;
 
-                    while (waitingValues.Count > 0)
+                    DataSample s;
+                    while (!waitingValues.IsEmpty)
                     {
-                        DataSample v = waitingValues.Dequeue();
-                        appendValue.value[0] += v.value[0];
-                        appendValue.value[1] += v.value[1];
-                        appendValue.value[2] += v.value[2];
-                        appendValue.value[3] += v.value[3];
+                        if (waitingValues.TryDequeue(out s))
+                        {
+                            ChartAppend(s);
+                            appendValue.value[0] += s.value[0];
+                            appendValue.value[1] += s.value[1];
+                            appendValue.value[2] += s.value[2];
+                            appendValue.value[3] += s.value[3];
+                        }
                     }
 
+                    //TODO: restore average mode
                     // Calculate Average value in SynchronizedAverage Mode
                     //if (timerMode == TimerMode.SynchronizedAverage)
                     //    appendValue = appendValue / valueCount;
@@ -352,14 +342,19 @@ namespace SpPerfChart
         /// </summary>
         /// <param name="value">performance value</param>
         /// <returns>vertical Point position in Pixels</returns>
-        private Int32 CalcVerticalPosition(Int32 value) {
-            Int32 result = 0;
+        private double CalcVerticalPosition(PerfChartPenStyle pt, Int32 value) {
+            double result = 0;
 
-            if (scaleMode == ScaleMode.Absolute)
-                result = value * this.Height / 100;
-            else if (scaleMode == ScaleMode.Relative)
-                result = (currentMaxValue > 0) ? (value * this.Height / currentMaxValue) : 0;
+            if (pt.ScaleMode == ScaleMode.Absolute)
+            {
+                result = (((double)value + pt.Offset) / pt.Scale) * (double)this.Height;
+            }
+            else if (pt.ScaleMode == ScaleMode.Relative)
+            {
+                result = (pt.currentMaxValue > 0) ? (value * this.Height / pt.currentMaxValue) : 0;
+            }
 
+            // Invert the graph to have Y going up
             result = this.Height - result;
 
             return result;
@@ -367,19 +362,23 @@ namespace SpPerfChart
 
 
         /// <summary>
-        /// Returns the currently highest (displayed) value, for Relative ScaleMode
+        /// Calculate the currently highest and lowest value, for Relative ScaleMode
+        /// and put the result in the Pen data area
         /// </summary>
         /// <returns></returns>
-        private Int32 GetHighestValueForRelativeMode() {
-            Int32 maxValue = 0;
-
-            for (int i = 0; i < visibleValues; i++) {
+        private void GetMinMaxValueForRelativeMode(int pt) {
+            Int32 maxValue = Int32.MinValue;
+            Int32 minValue = Int32.MaxValue;
+            for (int i = 0; i < drawValues.Count; i++)
+            {
                 // Set if higher then previous max value
-                if (drawValues[i].value[0] > maxValue)
-                    maxValue = drawValues[i].value[0];
+                if (drawValues[i].value[pt] > maxValue)
+                    maxValue = drawValues[i].value[pt];
+                if (drawValues[i].value[pt] < minValue)
+                    minValue = drawValues[i].value[pt];
             }
-
-            return maxValue;
+            perfChartPenStyles[pt].currentMinValue = minValue;
+            perfChartPenStyles[pt].currentMaxValue = maxValue;
         }
 
         #endregion
@@ -392,13 +391,10 @@ namespace SpPerfChart
         /// </summary>
         /// <param name="g">Graphics</param>
         private void DrawChart(Graphics g) {
-            visibleValues = Math.Min(this.Width / valueSpacing, drawValues.Count);
+            int visibleValues = Math.Min(this.Width / valueSpacing, drawValues.Count);
 
             int startDisplay = Math.Min(drawValues.Count, chartOffset); ;
             int stopDisplay = Math.Min(drawValues.Count, visibleValues + chartOffset);
-
-            if (scaleMode == ScaleMode.Relative)
-                currentMaxValue = GetHighestValueForRelativeMode();
 
             // Dirty little "trick": initialize the first previous Point outside the bounds
             Point[] previousPoint = new Point[4];
@@ -419,13 +415,11 @@ namespace SpPerfChart
             {
                 if (perfChartPenStyles[pt].ShowPen)
                 {
+                    GetMinMaxValueForRelativeMode(pt);
                     for (int i = startDisplay; i < stopDisplay; i++)
                     {
                         currentPoint[pt].X = previousPoint[pt].X - valueSpacing;
-                        //currentPoint[pt].Y = CalcVerticalPosition(drawValues[i].value[pt]);
-
-                        double result = (((double)drawValues[i].value[pt] + perfChartPenStyles[pt].Offset) / perfChartPenStyles[pt].Scale) * (double)this.Height;
-                        currentPoint[pt].Y = (int) (this.Height - result);
+                        currentPoint[pt].Y = (int)CalcVerticalPosition(perfChartPenStyles[pt], drawValues[i].value[pt]);
 
                         // Actually draw the line
                         g.DrawLine(perfChartPenStyles[pt].ChartLinePen.Pen, previousPoint[pt], currentPoint[pt]);
@@ -435,25 +429,25 @@ namespace SpPerfChart
                 }
             }
             // Draw current relative maximum value stirng
-            if (scaleMode == ScaleMode.Relative) {
-                SolidBrush sb = new SolidBrush(perfChartPenStyles[0].ChartLinePen.Color);
-                g.DrawString(currentMaxValue.ToString(), this.Font, sb, 4.0f, 2.0f);
-            }
+            //if (scaleMode == ScaleMode.Relative) {
+            //    SolidBrush sb = new SolidBrush(perfChartPenStyles[0].ChartLinePen.Color);
+            //    g.DrawString(currentMaxValue.ToString(), this.Font, sb, 4.0f, 2.0f);
+            //}
 
             // Draw Border on top
             ControlPaint.DrawBorder3D(g, 0, 0, Width, Height, b3dstyle);
         }
 
 
-        private void DrawAverageLine(Graphics g) {
-            for (int i = 0; i < visibleValues; i++)
-                averageValue += drawValues[i].value[0];
+        //private void DrawAverageLine(Graphics g) {
+        //    for (int i = 0; i < visibleValues; i++)
+        //        averageValue += drawValues[i].value[0];
 
-            averageValue = averageValue / visibleValues;
+        //    averageValue = averageValue / visibleValues;
 
-            int verticalPosition = CalcVerticalPosition(averageValue);
-            g.DrawLine(perfChartPenStyles[0].AvgLinePen.Pen, 0, verticalPosition, Width, verticalPosition);
-        }
+        //    int verticalPosition = CalcVerticalPosition(averageValue);
+        //    g.DrawLine(perfChartPenStyles[0].AvgLinePen.Pen, 0, verticalPosition, Width, verticalPosition);
+        //}
 
         /// <summary>
         /// Draws the background gradient and the grid into Graphics <paramref name="g"/>

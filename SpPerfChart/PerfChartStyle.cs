@@ -7,6 +7,22 @@ using System.Drawing;
 
 namespace SpPerfChart
 {
+
+    /// <summary>
+    /// Scale mode for value aspect ratio
+    /// </summary>
+    public enum ScaleMode
+    {
+        /// <summary>
+        /// Absolute Scale Mode: Values are scaled by Scale and Offset
+        /// </summary>
+        Absolute,
+        /// <summary>
+        /// Relative Scale Mode: All values are allowed and displayed with 10% upper and lower bound
+        /// </summary>
+        Relative
+    }
+
     [TypeConverterAttribute(typeof(ExpandableObjectConverter))]
     public class PerfChartStyle
     {
@@ -75,6 +91,8 @@ namespace SpPerfChart
         public PerfChartPenStyle() {
             AvgLinePen = new ChartPen();
             ChartLinePen = new ChartPen();
+            currentMaxValue = 0;
+            currentMinValue = 0;
         }
 
         public bool ShowAverageLine { get; set; } = true;
@@ -88,6 +106,12 @@ namespace SpPerfChart
         public Double Scale { get; set; } = 1.0;
 
         public Double Offset { get; set; } = 0.0;
+
+        public ScaleMode ScaleMode { get; set; } 
+
+        internal Int32 currentMaxValue;
+
+        internal Int32 currentMinValue;
     }
 
     [TypeConverterAttribute(typeof(ExpandableObjectConverter))]
