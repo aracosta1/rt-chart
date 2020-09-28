@@ -26,20 +26,20 @@
         /// </summary>
              SpPerfChart.PerfChartPenStyle perfChartPenStyle1 = new SpPerfChart.PerfChartPenStyle();
        private void InitializeComponent() {
-            SpPerfChart.PerfChartPenStyle perfChartPenStyle1 = new SpPerfChart.PerfChartPenStyle();
-            SpPerfChart.ChartPen chartPen1 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen2 = new SpPerfChart.ChartPen();
-            SpPerfChart.PerfChartPenStyle perfChartPenStyle2 = new SpPerfChart.PerfChartPenStyle();
-            SpPerfChart.ChartPen chartPen3 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen4 = new SpPerfChart.ChartPen();
-            SpPerfChart.PerfChartPenStyle perfChartPenStyle3 = new SpPerfChart.PerfChartPenStyle();
-            SpPerfChart.ChartPen chartPen5 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen6 = new SpPerfChart.ChartPen();
-            SpPerfChart.PerfChartPenStyle perfChartPenStyle4 = new SpPerfChart.PerfChartPenStyle();
-            SpPerfChart.ChartPen chartPen7 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen8 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen9 = new SpPerfChart.ChartPen();
-            SpPerfChart.ChartPen chartPen10 = new SpPerfChart.ChartPen();
+            SpPerfChart.PerfChartPenStyle perfChartPenStyle5 = new SpPerfChart.PerfChartPenStyle();
+            SpPerfChart.ChartPen chartPen11 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen12 = new SpPerfChart.ChartPen();
+            SpPerfChart.PerfChartPenStyle perfChartPenStyle6 = new SpPerfChart.PerfChartPenStyle();
+            SpPerfChart.ChartPen chartPen13 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen14 = new SpPerfChart.ChartPen();
+            SpPerfChart.PerfChartPenStyle perfChartPenStyle7 = new SpPerfChart.PerfChartPenStyle();
+            SpPerfChart.ChartPen chartPen15 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen16 = new SpPerfChart.ChartPen();
+            SpPerfChart.PerfChartPenStyle perfChartPenStyle8 = new SpPerfChart.PerfChartPenStyle();
+            SpPerfChart.ChartPen chartPen17 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen18 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen19 = new SpPerfChart.ChartPen();
+            SpPerfChart.ChartPen chartPen20 = new SpPerfChart.ChartPen();
             this.grpBxChart = new System.Windows.Forms.GroupBox();
             this.perfChart = new SpPerfChart.PerfChart();
             this.grpBxRandVal = new System.Windows.Forms.GroupBox();
@@ -55,6 +55,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numUpDnChartOffset = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numUpDnChartSize = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.numUpDnTimerInterval = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
@@ -78,11 +82,9 @@
             this.propGrid3 = new System.Windows.Forms.PropertyGrid();
             this.Pen4 = new System.Windows.Forms.TabPage();
             this.propGrid4 = new System.Windows.Forms.PropertyGrid();
-            this.numUpDnChartSize = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.numUpDnChartOffset = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
             this.hScrollBar = new System.Windows.Forms.HScrollBar();
+            this.btnCanOn = new System.Windows.Forms.Button();
+            this.btnCanOFF = new System.Windows.Forms.Button();
             this.grpBxChart.SuspendLayout();
             this.grpBxRandVal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnToInterval)).BeginInit();
@@ -91,6 +93,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnValTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnValFrom)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnTimerInterval)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.Chart.SuspendLayout();
@@ -98,8 +102,6 @@
             this.Pen2.SuspendLayout();
             this.Pen3.SuspendLayout();
             this.Pen4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // grpBxChart
@@ -115,69 +117,84 @@
             // 
             // perfChart
             // 
+            this.perfChart.ChartOffset = 0;
+            this.perfChart.ChartSize = 500;
             this.perfChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.perfChart.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.perfChart.Location = new System.Drawing.Point(6, 19);
             this.perfChart.Name = "perfChart";
-            chartPen1.Color = System.Drawing.Color.Black;
-            chartPen1.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen1.Width = 1F;
-            perfChartPenStyle1.AvgLinePen = chartPen1;
-            chartPen2.Color = System.Drawing.Color.Red;
-            chartPen2.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen2.Width = 1F;
-            perfChartPenStyle1.ChartLinePen = chartPen2;
-            perfChartPenStyle1.ShowAverageLine = false;
-            chartPen3.Color = System.Drawing.Color.Black;
-            chartPen3.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen3.Width = 1F;
-            perfChartPenStyle2.AvgLinePen = chartPen3;
-            chartPen4.Color = System.Drawing.Color.Lime;
-            chartPen4.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen4.Width = 1F;
-            perfChartPenStyle2.ChartLinePen = chartPen4;
-            perfChartPenStyle2.ShowAverageLine = false;
-            chartPen5.Color = System.Drawing.Color.Black;
-            chartPen5.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen5.Width = 1F;
-            perfChartPenStyle3.AvgLinePen = chartPen5;
-            chartPen6.Color = System.Drawing.Color.Yellow;
-            chartPen6.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen6.Width = 1F;
-            perfChartPenStyle3.ChartLinePen = chartPen6;
-            perfChartPenStyle3.ShowAverageLine = false;
-            chartPen7.Color = System.Drawing.Color.Black;
-            chartPen7.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen7.Width = 1F;
-            perfChartPenStyle4.AvgLinePen = chartPen7;
-            chartPen8.Color = System.Drawing.Color.Blue;
-            chartPen8.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen8.Width = 1F;
-            perfChartPenStyle4.ChartLinePen = chartPen8;
-            perfChartPenStyle4.ShowAverageLine = false;
+            chartPen11.Color = System.Drawing.Color.Black;
+            chartPen11.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen11.Width = 1F;
+            perfChartPenStyle5.AvgLinePen = chartPen11;
+            chartPen12.Color = System.Drawing.Color.Red;
+            chartPen12.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen12.Width = 1F;
+            perfChartPenStyle5.ChartLinePen = chartPen12;
+            perfChartPenStyle5.Offset = 0D;
+            perfChartPenStyle5.Scale = 1D;
+            perfChartPenStyle5.ShowAverageLine = false;
+            perfChartPenStyle5.ShowPen = true;
+            chartPen13.Color = System.Drawing.Color.Black;
+            chartPen13.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen13.Width = 1F;
+            perfChartPenStyle6.AvgLinePen = chartPen13;
+            chartPen14.Color = System.Drawing.Color.Lime;
+            chartPen14.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen14.Width = 1F;
+            perfChartPenStyle6.ChartLinePen = chartPen14;
+            perfChartPenStyle6.Offset = 0D;
+            perfChartPenStyle6.Scale = 1D;
+            perfChartPenStyle6.ShowAverageLine = false;
+            perfChartPenStyle6.ShowPen = true;
+            chartPen15.Color = System.Drawing.Color.Black;
+            chartPen15.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen15.Width = 1F;
+            perfChartPenStyle7.AvgLinePen = chartPen15;
+            chartPen16.Color = System.Drawing.Color.Yellow;
+            chartPen16.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen16.Width = 1F;
+            perfChartPenStyle7.ChartLinePen = chartPen16;
+            perfChartPenStyle7.Offset = 0D;
+            perfChartPenStyle7.Scale = 1D;
+            perfChartPenStyle7.ShowAverageLine = false;
+            perfChartPenStyle7.ShowPen = true;
+            chartPen17.Color = System.Drawing.Color.Black;
+            chartPen17.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen17.Width = 1F;
+            perfChartPenStyle8.AvgLinePen = chartPen17;
+            chartPen18.Color = System.Drawing.Color.Blue;
+            chartPen18.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen18.Width = 1F;
+            perfChartPenStyle8.ChartLinePen = chartPen18;
+            perfChartPenStyle8.Offset = 0D;
+            perfChartPenStyle8.Scale = 1D;
+            perfChartPenStyle8.ShowAverageLine = false;
+            perfChartPenStyle8.ShowPen = true;
             this.perfChart.PerfChartPenStyles = new SpPerfChart.PerfChartPenStyle[] {
-        perfChartPenStyle1,
-        perfChartPenStyle2,
-        perfChartPenStyle3,
-        perfChartPenStyle4};
+        perfChartPenStyle5,
+        perfChartPenStyle6,
+        perfChartPenStyle7,
+        perfChartPenStyle8};
             this.perfChart.PerfChartStyle.AntiAliasing = false;
             this.perfChart.PerfChartStyle.BackgroundColorBottom = System.Drawing.Color.Black;
             this.perfChart.PerfChartStyle.BackgroundColorTop = System.Drawing.Color.Black;
-            chartPen9.Color = System.Drawing.Color.Black;
-            chartPen9.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen9.Width = 1F;
-            this.perfChart.PerfChartStyle.HorizontalGridPen = chartPen9;
+            chartPen19.Color = System.Drawing.Color.Black;
+            chartPen19.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen19.Width = 1F;
+            this.perfChart.PerfChartStyle.HorizontalGridPen = chartPen19;
             this.perfChart.PerfChartStyle.ShowHorizontalGridLines = false;
             this.perfChart.PerfChartStyle.ShowVerticalGridLines = false;
-            chartPen10.Color = System.Drawing.Color.Black;
-            chartPen10.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartPen10.Width = 1F;
-            this.perfChart.PerfChartStyle.VerticalGridPen = chartPen10;
-            this.perfChart.ScaleMode = SpPerfChart.ScaleMode.Relative;
+            chartPen20.Color = System.Drawing.Color.Black;
+            chartPen20.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartPen20.Width = 1F;
+            this.perfChart.PerfChartStyle.VerticalGridPen = chartPen20;
+            //this.perfChart.ScaleMode = SpPerfChart.ScaleMode.Relative;
             this.perfChart.Size = new System.Drawing.Size(1092, 337);
             this.perfChart.TabIndex = 0;
             this.perfChart.TimerInterval = 100;
             this.perfChart.TimerMode = SpPerfChart.TimerMode.Disabled;
+            this.perfChart.VisibleValues = 0;
             // 
             // grpBxRandVal
             // 
@@ -367,6 +384,60 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Engine Properties";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(17, 154);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(63, 13);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "Chart Offset";
+            // 
+            // numUpDnChartOffset
+            // 
+            this.numUpDnChartOffset.Location = new System.Drawing.Point(91, 151);
+            this.numUpDnChartOffset.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numUpDnChartOffset.Name = "numUpDnChartOffset";
+            this.numUpDnChartOffset.Size = new System.Drawing.Size(65, 20);
+            this.numUpDnChartOffset.TabIndex = 11;
+            this.numUpDnChartOffset.ValueChanged += new System.EventHandler(this.numUpDnChartOffset_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 128);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Chart Size";
+            // 
+            // numUpDnChartSize
+            // 
+            this.numUpDnChartSize.Location = new System.Drawing.Point(91, 125);
+            this.numUpDnChartSize.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numUpDnChartSize.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numUpDnChartSize.Name = "numUpDnChartSize";
+            this.numUpDnChartSize.Size = new System.Drawing.Size(65, 20);
+            this.numUpDnChartSize.TabIndex = 9;
+            this.numUpDnChartSize.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numUpDnChartSize.ValueChanged += new System.EventHandler(this.numUpDnChartSize_ValueChanged);
             // 
             // label11
             // 
@@ -623,60 +694,6 @@
             this.propGrid4.TabIndex = 2;
             this.propGrid4.ToolbarVisible = false;
             // 
-            // numUpDnChartSize
-            // 
-            this.numUpDnChartSize.Location = new System.Drawing.Point(91, 125);
-            this.numUpDnChartSize.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.numUpDnChartSize.Minimum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numUpDnChartSize.Name = "numUpDnChartSize";
-            this.numUpDnChartSize.Size = new System.Drawing.Size(65, 20);
-            this.numUpDnChartSize.TabIndex = 9;
-            this.numUpDnChartSize.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numUpDnChartSize.ValueChanged += new System.EventHandler(this.numUpDnChartSize_ValueChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 128);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Chart Size";
-            // 
-            // numUpDnChartOffset
-            // 
-            this.numUpDnChartOffset.Location = new System.Drawing.Point(91, 151);
-            this.numUpDnChartOffset.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.numUpDnChartOffset.Name = "numUpDnChartOffset";
-            this.numUpDnChartOffset.Size = new System.Drawing.Size(65, 20);
-            this.numUpDnChartOffset.TabIndex = 11;
-            this.numUpDnChartOffset.ValueChanged += new System.EventHandler(this.numUpDnChartOffset_ValueChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(17, 154);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(63, 13);
-            this.label12.TabIndex = 12;
-            this.label12.Text = "Chart Offset";
-            // 
             // hScrollBar
             // 
             this.hScrollBar.Location = new System.Drawing.Point(18, 381);
@@ -684,11 +701,33 @@
             this.hScrollBar.Size = new System.Drawing.Size(1092, 17);
             this.hScrollBar.TabIndex = 9;
             // 
+            // btnCanOn
+            // 
+            this.btnCanOn.Location = new System.Drawing.Point(1015, 497);
+            this.btnCanOn.Name = "btnCanOn";
+            this.btnCanOn.Size = new System.Drawing.Size(75, 23);
+            this.btnCanOn.TabIndex = 10;
+            this.btnCanOn.Text = "Can ON";
+            this.btnCanOn.UseVisualStyleBackColor = true;
+            this.btnCanOn.Click += new System.EventHandler(this.btnCanOn_Click);
+            // 
+            // btnCanOFF
+            // 
+            this.btnCanOFF.Location = new System.Drawing.Point(1015, 526);
+            this.btnCanOFF.Name = "btnCanOFF";
+            this.btnCanOFF.Size = new System.Drawing.Size(75, 23);
+            this.btnCanOFF.TabIndex = 11;
+            this.btnCanOFF.Text = "Can OFF";
+            this.btnCanOFF.UseVisualStyleBackColor = true;
+            this.btnCanOFF.Click += new System.EventHandler(this.btnCanOFF_Click);
+            // 
             // FrmTestingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 643);
+            this.Controls.Add(this.btnCanOFF);
+            this.Controls.Add(this.btnCanOn);
             this.Controls.Add(this.hScrollBar);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnClear);
@@ -712,6 +751,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnValFrom)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDnTimerInterval)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.Chart.ResumeLayout(false);
@@ -719,8 +760,6 @@
             this.Pen2.ResumeLayout(false);
             this.Pen3.ResumeLayout(false);
             this.Pen4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numUpDnChartOffset)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -770,5 +809,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numUpDnChartOffset;
         private System.Windows.Forms.HScrollBar hScrollBar;
+        private System.Windows.Forms.Button btnCanOn;
+        private System.Windows.Forms.Button btnCanOFF;
     }
 }

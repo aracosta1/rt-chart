@@ -7,6 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 
+using canlibCLSNET;
+using System.Diagnostics;
+using System.Net;
+
 namespace SimplePerfChart
 {
     public partial class FrmTestingForm : Form
@@ -21,8 +25,12 @@ namespace SimplePerfChart
 
         private int value = 0;
 
+        Thread canThread;
+        bool exit_request = false;
+
         public FrmTestingForm()
         {
+
             InitializeComponent();
 
             this.Font = SystemInformation.MenuFont;
@@ -53,11 +61,81 @@ namespace SimplePerfChart
 
             // Select default values
             cmbBxTimerMode.SelectedItem = perfChart.TimerMode.ToString();
-            cmbBxScaleMode.SelectedItem = perfChart.ScaleMode.ToString();
             cmbBxBorder.SelectedItem = perfChart.BorderStyle.ToString();
+
+            
         }
 
+        private void canThreadFunct()
+        {
+            int canHandle;
+            Canlib.canStatus status;
 
+            int channel_number = 0;
+            int id;
+            byte[] msg = new byte[8];
+            int dlc;
+            int flag;
+            long time;
+            long timeout;
+            int val0 = 0;
+            int val1 = 0;
+            int val2 = 0;
+            int val3 = 0;
+            long count0 = 1;
+            long count1 = 2;
+            long count2 = 3;
+            long count3 = 4;
+
+            Canlib.canInitializeLibrary();
+            canHandle = Canlib.canOpenChannel(channel_number, Canlib.canOPEN_NO_INIT_ACCESS);
+            CheckStatus((Canlib.canStatus)canHandle, "canOpenChannel");
+
+            // Next, take the channel on bus using the canBusOn method. This
+            // needs to be done before we can send a message.
+            status = Canlib.canBusOn(canHandle);
+            CheckStatus(status, "canBusOn");
+
+            timeout = 1000;
+
+            while (!exit_request)
+            {
+                status = Canlib.canReadWait(canHandle, out id, msg, out dlc, out flag, out time, timeout );
+                CheckStatus(status, "canReadWait");
+                if (id == 0x700)
+                {
+                    val0 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 0));
+                    count0 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 4));
+                }
+                if (id == 0x701)
+                {
+                    val1 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 0));
+                    count1 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 4));
+                }
+                if (id == 0x702)
+                {
+                    val2 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 0));
+                    count2 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 4));
+                }
+                if (id == 0x703)
+                {
+                    val3 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 0));
+                    count3 = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(msg, 4));
+                }
+                if (count0 == count1 && count0 == count2 && count0 == count3)
+                {
+                    SpPerfChart.DataSample genValue = new SpPerfChart.DataSample();
+                    genValue.value[0] = val0;
+                    genValue.value[1] = val1;
+                    genValue.value[2] = val2;
+                    genValue.value[3] = val3;
+                    perfChart.AddValue(genValue);
+                }
+            }
+            status = Canlib.canBusOff(canHandle);
+            CheckStatus(status, "canBusOff");
+
+        }
 
         private void chkBxTimerEnabled_CheckedChanged(object sender, EventArgs e)
         {
@@ -94,7 +172,7 @@ namespace SimplePerfChart
 
             perfChart.AddValue(genValue);
 
-            hScrollBar.Maximum = perfChart.
+            //hScrollBar.Maximum = perfChart.
             if (chkBxTimerEnabled.Checked)
             {
                 //Simply restart, if still enabled
@@ -111,9 +189,9 @@ namespace SimplePerfChart
 
         private void cmbBxScaleMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            perfChart.ScaleMode = (SpPerfChart.ScaleMode)Enum.Parse(
-                typeof(SpPerfChart.ScaleMode), cmbBxScaleMode.SelectedItem.ToString()
-            );
+            //perfChart.ScaleMode = (SpPerfChart.ScaleMode)Enum.Parse(
+            //    typeof(SpPerfChart.ScaleMode), cmbBxScaleMode.SelectedItem.ToString()
+            //);
         }
 
         private void cmbBxTimerMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -162,5 +240,39 @@ namespace SimplePerfChart
             perfChart.Clear();
         }
 
+
+        // The check method takes a canStatus (which is an enumerable) and the method
+        // name as a string argument. If the status is an error code, it will print it.
+        // Most Canlib method return a status, and checking it with a method like this
+        // is a useful practice to avoid code duplication.
+        private static void CheckStatus(Canlib.canStatus status, string method)
+        {
+            if (status < 0)
+            {
+                string errorText;
+                Canlib.canGetErrorText(status, out errorText);
+                Debug.WriteLine(method + " failed: " + errorText);
+            }
+        }
+
+        private void btnCanOFF_Click(object sender, EventArgs e)
+        {
+            if (canThread != null)
+            {
+                exit_request = true;
+                canThread.Join(2000);
+                canThread = null;
+            }
+        }
+
+        private void btnCanOn_Click(object sender, EventArgs e)
+        {
+            if (canThread == null)
+            {
+                exit_request = false;
+                canThread = new Thread(canThreadFunct);
+                canThread.Start();
+            }
+        }
     }
 }
