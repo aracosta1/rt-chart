@@ -32,6 +32,10 @@
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
+            // tmrRefresh
+            // 
+            this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
+            // 
             // ChartArea
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
