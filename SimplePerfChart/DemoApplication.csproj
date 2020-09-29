@@ -83,9 +83,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SpPerfChart\SpPerfChart.csproj">
-      <Project>{F2FF6C46-A791-4CAE-AB46-BD1A37F3FCD7}</Project>
-      <Name>SpPerfChart</Name>
+    <ProjectReference Include="..\RealtimeChart\RealtimeChart.csproj">
+      <Project>{6b6a5e7c-eae9-4eba-a23e-b3c99b6bd81e}</Project>
+      <Name>RealtimeChart</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

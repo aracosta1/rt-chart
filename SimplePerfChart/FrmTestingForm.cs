@@ -35,33 +35,29 @@ namespace SimplePerfChart
 
             this.Font = SystemInformation.MenuFont;
 
-            propertyGrid.SelectedObject = perfChart.PerfChartStyle;
+            propertyGrid.SelectedObject = mainChart.ChartStyle;
 
-            propGrid1.SelectedObject = perfChart.PerfChartPenStyles[0];
-            propGrid2.SelectedObject = perfChart.PerfChartPenStyles[1];
-            propGrid3.SelectedObject = perfChart.PerfChartPenStyles[2];
-            propGrid4.SelectedObject = perfChart.PerfChartPenStyles[3];
+            propGrid1.SelectedObject = mainChart.PenStyles[0];
+            propGrid2.SelectedObject = mainChart.PenStyles[1];
+            propGrid3.SelectedObject = mainChart.PenStyles[2];
+            propGrid4.SelectedObject = mainChart.PenStyles[3];
 
             // Apply default Properties
-            perfChart.TimerInterval = 1000;
+            mainChart.TimerInterval = 1000;
 
             // Populate DrowDown Boxes
             foreach (String item in System.Enum.GetNames(typeof(Border3DStyle)))
             {
                 cmbBxBorder.Items.Add(item);
             }
-            foreach (String item in System.Enum.GetNames(typeof(SpPerfChart.ScaleMode)))
-            {
-                cmbBxScaleMode.Items.Add(item);
-            }
-            foreach (String item in System.Enum.GetNames(typeof(SpPerfChart.TimerMode)))
+            foreach (String item in System.Enum.GetNames(typeof(realtimeChart.TimerMode)))
             {
                 cmbBxTimerMode.Items.Add(item);
             }
 
             // Select default values
-            cmbBxTimerMode.SelectedItem = perfChart.TimerMode.ToString();
-            cmbBxBorder.SelectedItem = perfChart.BorderStyle.ToString();
+            cmbBxTimerMode.SelectedItem = mainChart.TimerMode.ToString();
+            cmbBxBorder.SelectedItem = mainChart.BorderStyle.ToString();
 
             
         }
@@ -124,12 +120,12 @@ namespace SimplePerfChart
                 }
                 if (count0 == count1 && count0 == count2 && count0 == count3)
                 {
-                    SpPerfChart.DataSample genValue = new SpPerfChart.DataSample();
+                    realtimeChart.DataSample genValue = new realtimeChart.DataSample();
                     genValue.value[0] = val0;
                     genValue.value[1] = val1;
                     genValue.value[2] = val2;
                     genValue.value[3] = val3;
-                    perfChart.AddValue(genValue);
+                    mainChart.AddValue(genValue);
                 }
             }
             status = Canlib.canBusOff(canHandle);
@@ -158,7 +154,7 @@ namespace SimplePerfChart
 
         private void bgWrkTimer_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            SpPerfChart.DataSample genValue = new SpPerfChart.DataSample();
+            realtimeChart.DataSample genValue = new realtimeChart.DataSample();
             genValue.value[0] = value;
             value++;
             if (value < valueGenFrom)
@@ -170,7 +166,7 @@ namespace SimplePerfChart
             genValue.value[2] = randGen.Next(valueGenFrom, valueGenTo);
             genValue.value[3] = randGen.Next(valueGenFrom, valueGenTo);
 
-            perfChart.AddValue(genValue);
+            mainChart.AddValue(genValue);
 
             //hScrollBar.Maximum = perfChart.
             if (chkBxTimerEnabled.Checked)
@@ -182,7 +178,7 @@ namespace SimplePerfChart
 
         private void cmbBxBorder_SelectedIndexChanged(object sender, EventArgs e)
         {
-            perfChart.BorderStyle = (Border3DStyle)Enum.Parse(
+            mainChart.BorderStyle = (Border3DStyle)Enum.Parse(
                 typeof(Border3DStyle), cmbBxBorder.SelectedItem.ToString()
             );
         }
@@ -196,24 +192,24 @@ namespace SimplePerfChart
 
         private void cmbBxTimerMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            perfChart.TimerMode = (SpPerfChart.TimerMode)Enum.Parse(
-                typeof(SpPerfChart.TimerMode), cmbBxTimerMode.SelectedItem.ToString()
+            mainChart.TimerMode = (realtimeChart.TimerMode)Enum.Parse(
+                typeof(realtimeChart.TimerMode), cmbBxTimerMode.SelectedItem.ToString()
             );
         }
 
         private void numUpDnTimerInterval_ValueChanged(object sender, EventArgs e)
         {
-            perfChart.TimerInterval = Convert.ToInt32(numUpDnTimerInterval.Value);
+            mainChart.TimerInterval = Convert.ToInt32(numUpDnTimerInterval.Value);
         }
 
         private void numUpDnChartSize_ValueChanged(object sender, EventArgs e)
         {
-            perfChart.ChartSize = Convert.ToInt32(numUpDnChartSize.Value);
+            mainChart.ChartSize = Convert.ToInt32(numUpDnChartSize.Value);
         }
 
         private void numUpDnChartOffset_ValueChanged(object sender, EventArgs e)
         {
-            perfChart.ChartOffset = Convert.ToInt32(numUpDnChartOffset.Value);
+            mainChart.ChartOffset = Convert.ToInt32(numUpDnChartOffset.Value);
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -237,7 +233,7 @@ namespace SimplePerfChart
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            perfChart.Clear();
+            mainChart.Clear();
         }
 
 
