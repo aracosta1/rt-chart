@@ -207,11 +207,6 @@ namespace SimplePerfChart
             mainChart.ChartSize = Convert.ToInt32(numUpDnChartSize.Value);
         }
 
-        private void numUpDnChartOffset_ValueChanged(object sender, EventArgs e)
-        {
-            mainChart.ChartOffset = Convert.ToInt32(numUpDnChartOffset.Value);
-        }
-
         private void btnApply_Click(object sender, EventArgs e)
         {
             valueGenFrom = Convert.ToInt32(numUpDnValFrom.Value);
@@ -269,6 +264,11 @@ namespace SimplePerfChart
                 canThread = new Thread(canThreadFunct);
                 canThread.Start();
             }
+        }
+
+        private void FrmTestingForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            exit_request = true;
         }
     }
 }
